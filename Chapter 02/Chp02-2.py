@@ -37,7 +37,7 @@ def main() :
 
     ## 샘플 데이터 주입
     new_fish = [25, 150]
-    distance, indexes = kn.kneighbors([new_fish])    
+    _, indexes = kn.kneighbors([new_fish])    
     plt.scatter(train_input[:, 0], train_input[:, 1])
     plt.scatter(train_input[indexes, 0], train_input[indexes, 1], marker = 'D')
     plt.scatter(new_fish[0], new_fish[1], marker = '^')

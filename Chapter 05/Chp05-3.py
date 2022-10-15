@@ -9,46 +9,50 @@ from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.inspection import permutation_importance
 
 
+def main() :
+    wine = pd.read_csv("https://bit.ly/wine_csv_data")
+    data = wine[["alcohol", "sugar", "pH"]].to_numpy()
+    target = wine["class"].to_numpy()
+    train_input, test_input, train_target, test_target = train_test_split(data, target, test_size=0.2, random_state=42)
 
-wine = pd.read_csv("https://bit.ly/wine_csv_data")
-data = wine[["alcohol", "sugar", "pH"]].to_numpy()
-target = wine["class"].to_numpy()
-train_input, test_input, train_target, test_target = train_test_split(data, target, test_size=0.2, random_state=42)
+    rf = RandomForestClassifier(n_jobs=-1, random_state=42)
+    scores = cross_validate(rf, train_input, train_target, return_train_score=True, n_jobs=-1)
+    print(np.mean(scores["train_score"]), np.mean(scores["test_score"]))
 
-rf = RandomForestClassifier(n_jobs=-1, random_state=42)
-scores = cross_validate(rf, train_input, train_target, return_train_score=True, n_jobs=-1)
-print(np.mean(scores["train_score"]), np.mean(scores["test_score"]))
+    rf.fit(train_input, train_target)
+    print(rf.feature_importances_)
 
-rf.fit(train_input, train_target)
-print(rf.feature_importances_)
+    rf = RandomForestClassifier(oob_score=True, n_jobs=-1, random_state=42)
+    rf.fit(train_input, train_target)
+    print(rf.oob_score_)
 
-rf = RandomForestClassifier(oob_score=True, n_jobs=-1, random_state=42)
-rf.fit(train_input, train_target)
-print(rf.oob_score_)
+    et = ExtraTreesClassifier(n_jobs=-1, random_state=42)
+    scores = cross_validate(et, train_input, train_target, return_train_score=True, n_jobs=-1)
+    print(np.mean(scores["train_score"]), np.mean(scores["test_score"]))
 
-et = ExtraTreesClassifier(n_jobs=-1, random_state=42)
-scores = cross_validate(et, train_input, train_target, return_train_score=True, n_jobs=-1)
-print(np.mean(scores["train_score"]), np.mean(scores["test_score"]))
+    et.fit(train_input, train_target)
+    print(et.feature_importances_)
 
-et.fit(train_input, train_target)
-print(et.feature_importances_)
+    gb = GradientBoostingClassifier(random_state=42)
+    scores = cross_validate(gb, train_input, train_target, return_train_score=True, n_jobs=-1)
+    print(np.mean(scores["train_score"]), np.mean(scores["test_score"]))
 
-gb = GradientBoostingClassifier(random_state=42)
-scores = cross_validate(gb, train_input, train_target, return_train_score=True, n_jobs=-1)
-print(np.mean(scores["train_score"]), np.mean(scores["test_score"]))
+    gb.fit(train_input, train_target)
+    print(gb.feature_importances_)
 
-gb.fit(train_input, train_target)
-print(gb.feature_importances_)
+    hgb = HistGradientBoostingClassifier(random_state=42)
+    scores = cross_validate(hgb, train_input, train_target, return_train_score=True)
+    print(np.mean(scores["train_score"]), np.mean(scores["test_score"]))
 
-hgb = HistGradientBoostingClassifier(random_state=42)
-scores = cross_validate(hgb, train_input, train_target, return_train_score=True)
-print(np.mean(scores["train_score"]), np.mean(scores["test_score"]))
+    hgb.fit(train_input, train_target)
+    result = permutation_importance(hgb, train_input, train_target, n_repeats=10, random_state=42, n_jobs=-1)
+    print(result.importances_mean)
 
-hgb.fit(train_input, train_target)
-result = permutation_importance(hgb, train_input, train_target, n_repeats=10, random_state=42, n_jobs=-1)
-print(result.importances_mean)
+    result = permutation_importance(hgb, test_input, test_target, n_repeats=10, random_state=42, n_jobs=-1)
+    print(result.importances_mean)
 
-result = permutation_importance(hgb, test_input, test_target, n_repeats=10, random_state=42, n_jobs=-1)
-print(result.importances_mean)
+    hgb.score(test_input, test_target)
 
-hgb.score(test_input, test_target)
+
+if __name__ == "__main__" :
+    main()

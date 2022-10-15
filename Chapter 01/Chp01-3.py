@@ -48,7 +48,7 @@ def main() :
     kn.fit(fish_data, answer_book)
     kn.score(fish_data, answer_book)
 
-    ## 새로운 데이터 판별
+    ## 새로운 데이터 판별; 예측
     new_fish = [30, 600]    # len: 30, wei: 600
     print(kn.predict([new_fish]))
 
