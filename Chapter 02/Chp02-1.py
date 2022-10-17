@@ -1,5 +1,4 @@
 from sklearn.neighbors import KNeighborsClassifier
-import sklearn
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -10,7 +9,6 @@ def main() :
                     31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 
                     35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0, 9.8, 
                     10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]
-
     fish_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 
                     500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 
                     700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0, 6.7, 
@@ -19,54 +17,51 @@ def main() :
 
     ## 물고기 데이터 2차원 배열, 정답지 제작
     fish_data = [[l, w] for l, w in zip(fish_length, fish_weight)]
-    answer_book = [1] * 35 + [0] * 14
+    fish_target = [1] * 35 + [0] * 14
 
 
     ## 테스트 세트, 훈련 세트 준비
-    kn = KNeighborsClassifier()
-
     train_input = fish_data[:35]
-    train_answer = answer_book[:35]
-
+    train_target =  fish_target[:35]
     test_input = fish_data[35:]
-    test_answer = answer_book[35:]
+    test_target = fish_target[35:]
 
 
     ## K-NN 모델 훈련; 1차
-    kn = kn.fit(train_input, train_answer)
-    print(kn.score(test_input, test_answer))
-
+    kn = KNeighborsClassifier()
+    kn.fit(train_input, train_target)
+    print(kn.score(train_input, train_target))
+    print(kn.score(test_input, test_target))
+    
 
     ## 넘파이 배열 변환
-    np_fish_data = np.array(fish_data)
-    np_answer_book = np.array(answer_book)
+    input_arr = np.array(fish_data)
+    target_arr = np.array(fish_target)
 
 
     ## 샘플링 편향 해결
-    ##np.random.seed(42)
+    np.random.seed(42)
     index = np.arange(49)
     np.random.shuffle(index)
+    train_input = input_arr[index[:35]]
+    train_target = target_arr[index[:35]]
+    test_input = input_arr[index[35:]]
+    test_target = target_arr[index[35:]]
 
-    train_input = np_fish_data[index[:35]]
-    train_answer = np_answer_book[index[:35]]
 
-    test_input = np_fish_data[index[35:]]
-    test_answer = np_answer_book[index[35:]]
-
-    
     ## 산점도 산출
     plt.scatter(train_input[:, 0], train_input[:, 1])
     plt.scatter(test_input[:, 0], test_input[:, 1])
-
     plt.xlabel("Length")
     plt.ylabel("Weight")
-
     plt.show()
 
 
     ## K-NN 모델 훈련; 2차
-    kn = kn.fit(train_input, train_answer)
-    print(kn.score(test_input, test_answer))
+    kn = KNeighborsClassifier()
+    kn.fit(train_input, train_target)
+    print(kn.score(train_input, train_target))
+    print(kn.score(test_input, test_target))
 
 
 

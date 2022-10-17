@@ -13,7 +13,6 @@ def main() :
     ## 데이터 준비
     df = pd.read_csv("https://bit.ly/perch_csv_data")
     perch_full = df.to_numpy()
-
     perch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0,
         115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0,
         150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0,
@@ -27,13 +26,7 @@ def main() :
     train_input, test_input, train_target, test_target = train_test_split(perch_full, perch_weight, random_state=42)
 
 
-    ## 특성 공학 적용
-    poly = PolynomialFeatures()
-    poly.fit([[2, 3]])
-    print(poly.transform([[2, 3]]))
-
-
-    ## 훈련 세트, 테스트 세트 변환
+    ## 훈련 세트, 테스트 세트 변환; 특성 공학 적용
     poly = PolynomialFeatures(include_bias=False)
     poly.fit(train_input)
     train_poly = poly.transform(train_input)
@@ -60,15 +53,12 @@ def main() :
     ## alpha 값 탐색하기
     train_score = []
     test_score = []
-
     alpha_list = [0.001, 0.01, 0.1, 1, 10, 100]
-
     for alpha in alpha_list :
         ridge = Ridge(alpha = alpha)
         ridge.fit(train_scaled, train_target)
         train_score.append(ridge.score(train_scaled, train_target))
         test_score.append(ridge.score(test_scaled, test_target))
-
     plt.plot(np.log10(alpha_list), train_score)
     plt.plot(np.log10(alpha_list), test_score)
     plt.xlabel("Alpha")
@@ -89,15 +79,12 @@ def main() :
     ## 라쏘 규제 alpha 값 조정
     train_score = []
     test_score = []
-
     alpha_list = [0.001, 0.01, 0.1, 1, 10, 100]
-
     for alpha in alpha_list :
         lasso = Lasso(alpha = alpha, max_iter=10000)
         lasso.fit(train_scaled, train_target)
         train_score.append(lasso.score(train_scaled, train_target))
         test_score.append(lasso.score(test_scaled, test_target))
-
     plt.plot(np.log10(alpha_list), train_score)
     plt.plot(np.log10(alpha_list), test_score)
     plt.xlabel("Alpha")

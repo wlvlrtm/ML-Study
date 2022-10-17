@@ -13,7 +13,6 @@ def main() :
               27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0,
               39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5,
               44.0])
-              
        perch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0,
               115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0,
               150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0,
@@ -32,48 +31,41 @@ def main() :
 
        ## 훈련, 테스트 세트 분리
        train_input, test_input, train_target, test_target = train_test_split(perch_length, perch_weight, random_state=42)
-       train_input = train_input.reshape(-1, 1) 
+       train_input = train_input.reshape(-1, 1)
        test_input = test_input.reshape(-1, 1)
-
        print(train_input.shape)
        print(test_input.shape)
-       print()
-
 
        ## K-NR 훈련
        knr = KNeighborsRegressor()
        knr.fit(train_input, train_target)
-
+       print(knr.score(train_input, train_target))
        print(knr.score(test_input, test_target))
-       print()
 
 
-       ## 타깃, 예측 절댓값 오차 평균 출력
+       ## 테스트 세트에 대한 예측 출력
        test_prediction = knr.predict(test_input)
+       print("test_prediction: ", test_prediction)
+
+
+       ## 타깃, 예측 평균 절댓값 오차 출력
        mae = mean_absolute_error(test_target, test_prediction)
-       
-       print(mae)
-       print()
+       print("mae: ", mae)
 
 
        ## 과소/과대적합 테스트
        print(knr.score(train_input, train_target))
-       print(knr.score(test_input,test_target))
-       print()
+       print(knr.score(test_input, test_target))
 
 
        ## 과소적합 해결
        knr.n_neighbors = 3
        knr.fit(train_input, train_target)
 
+       ## 모델 테스트
        print(knr.score(train_input, train_target))
        print(knr.score(test_input, test_target))
-       print()
 
-
-       ## 모델 테스트
-       new_fish = [15.0]
-       print(knr.predict([new_fish]))
 
 
 if __name__ == "__main__" :

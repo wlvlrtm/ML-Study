@@ -13,7 +13,6 @@ def main() :
                             27.5, 28.0, 28.7, 30.0, 32.8, 34.5, 35.0, 36.5, 36.0, 37.0, 37.0,
                             39.0, 39.0, 39.0, 40.0, 40.0, 40.0, 40.0, 42.0, 43.0, 43.0, 43.5,
                             44.0])
-
     perch_weight = np.array([5.9, 32.0, 40.0, 51.5, 70.0, 100.0, 78.0, 80.0, 85.0, 85.0, 110.0,
                             115.0, 125.0, 130.0, 120.0, 120.0, 130.0, 135.0, 110.0, 130.0,
                             150.0, 145.0, 150.0, 170.0, 225.0, 145.0, 188.0, 180.0, 197.0,
@@ -32,7 +31,6 @@ def main() :
     ## 새로운 농어 무게 예측
     knr = KNeighborsRegressor()
     knr.fit(train_input, train_target)
-
     print(knr.predict([[50]]))
 
 
@@ -49,7 +47,6 @@ def main() :
     ## 선형 회귀 훈련
     lr = LinearRegression()
     lr.fit(train_input, train_target)
-
     print(lr.predict([[50]]))
 
 
@@ -66,10 +63,9 @@ def main() :
     plt.show()
 
 
-    ## 훈련/테스트 세트 수정
+    ## 훈련/테스트 세트 수정; 2차 방정식
     train_poly = np.column_stack((train_input**2, train_input))
     test_poly = np.column_stack((test_input**2, test_input))
-
     print(train_poly.shape, test_poly.shape)
 
 
@@ -82,9 +78,8 @@ def main() :
     print(lr.coef_, lr.intercept_)
 
 
-    ## 산점도 출력
+    ## 산점도 출력; 그래프 적용
     point = np.arange(15, 50)
-
     plt.scatter(train_input, train_target)
     plt.plot(point, 1.01*point**2 - 21.6*point + 116.05)
     plt.scatter(50, 1574, marker='^')
@@ -96,6 +91,7 @@ def main() :
     ## R^2 점수 평가
     print(lr.score(train_poly, train_target))
     print(lr.score(test_poly, test_target))
+
 
 
 if __name__ == "__main__" :
