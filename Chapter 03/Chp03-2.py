@@ -28,7 +28,7 @@ def main() :
     test_input = test_input.reshape(-1, 1)
 
 
-    ## 새로운 농어 무게 예측
+    ## 새로운 농어 무게 예측; K-NR 모델 사용
     knr = KNeighborsRegressor()
     knr.fit(train_input, train_target)
     print(knr.predict([[50]]))
@@ -38,7 +38,7 @@ def main() :
     _, indexes = knr.kneighbors([[50]])
     plt.scatter(train_input, train_target)
     plt.scatter(train_input[indexes], train_target[indexes], marker='D')
-    plt.scatter(50, 984, marker='^')
+    plt.scatter(50, 1010, marker='^')
     plt.xlabel("Length")
     plt.ylabel("Weight")
     plt.show()
@@ -61,15 +61,19 @@ def main() :
     plt.xlabel("Length")
     plt.ylabel("Weight")
     plt.show()
-
+    print(lr.score(train_input, train_target))
+    print(lr.score(test_input, test_target))
+    
 
     ## 훈련/테스트 세트 수정; 2차 방정식
     train_poly = np.column_stack((train_input**2, train_input))
     test_poly = np.column_stack((test_input**2, test_input))
-    print(train_poly.shape, test_poly.shape)
+    print(train_poly.shape)
+    print(test_poly.shape)
 
 
     ## 다항 회귀 모델 훈련
+    lr = LinearRegression()
     lr.fit(train_poly, train_target)
     print(lr.predict([[50**2, 50]]))
 
@@ -81,8 +85,8 @@ def main() :
     ## 산점도 출력; 그래프 적용
     point = np.arange(15, 50)
     plt.scatter(train_input, train_target)
-    plt.plot(point, 1.01*point**2 - 21.6*point + 116.05)
-    plt.scatter(50, 1574, marker='^')
+    plt.plot(point, 1.01433211 * point**2 -21.55792498 * point + 116.05021078278338)
+    plt.scatter([50], [1574], marker='^')
     plt.xlabel("Length")
     plt.ylabel("Weight")
     plt.show()

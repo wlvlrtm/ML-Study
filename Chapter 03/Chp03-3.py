@@ -36,7 +36,9 @@ def main() :
     ## 다항 회귀 점수 출력
     lr = LinearRegression()
     lr.fit(train_poly, train_target)
-
+    print(lr.score(train_poly, train_target))
+    print(lr.score(test_poly, test_target))
+    
 
     ## 특성의 스케일 정규화
     ss = StandardScaler()
